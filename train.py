@@ -1,3 +1,10 @@
+import os
+
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID";
+#
+# # The GPU id to use, usually either "0" or "1";
+os.environ["CUDA_VISIBLE_DEVICES"] = "1";
+
 import argparse
 import logging
 import os
@@ -17,6 +24,16 @@ from ssd.utils.dist_util import synchronize
 from ssd.utils.logger import setup_logger
 from ssd.utils.misc import str2bool
 
+import random
+import numpy as np
+os.environ['PYTHONHASHSEED'] = str(3)
+random.seed(3)
+torch.manual_seed(3)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
+np.random.seed(3)
+torch.cuda.manual_seed(3)
+torch.cuda.manual_seed_all(3)
 
 def train(cfg, args):
     logger = logging.getLogger('SSD.trainer')
@@ -58,7 +75,7 @@ def main():
     parser.add_argument('--log_step', default=10, type=int, help='Print logs every log_step')
     parser.add_argument('--save_step', default=2500, type=int, help='Save checkpoint every save_step')
     parser.add_argument('--eval_step', default=2500, type=int, help='Evaluate dataset every eval_step, disabled when eval_step < 0')
-    parser.add_argument('--use_tensorboard', default=True, type=str2bool)
+    parser.add_argument('--use_tensorboard', default=False, type=str2bool)
     parser.add_argument(
         "--skip-test",
         dest="skip_test",
