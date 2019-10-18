@@ -1,9 +1,9 @@
 import os
-
-os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID";
 #
-# # The GPU id to use, usually either "0" or "1";
-os.environ["CUDA_VISIBLE_DEVICES"] = "1";
+# os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID";
+# #
+# # # The GPU id to use, usually either "0" or "1";
+# os.environ["CUDA_VISIBLE_DEVICES"] = "1";
 
 import argparse
 import logging
@@ -57,7 +57,6 @@ def train(cfg, args):
 
     max_iter = cfg.SOLVER.MAX_ITER // args.num_gpus
     train_loader = make_data_loader(cfg, is_train=True, distributed=args.distributed, max_iter=max_iter, start_iter=arguments['iteration'])
-
     model = do_train(cfg, model, train_loader, optimizer, scheduler, checkpointer, device, arguments, args)
     return model
 
@@ -92,7 +91,7 @@ def main():
     num_gpus = int(os.environ["WORLD_SIZE"]) if "WORLD_SIZE" in os.environ else 1
     args.distributed = num_gpus > 1
     args.num_gpus = num_gpus
-
+    print(args.skip_test,'skiptest')
     if torch.cuda.is_available():
         # This flag allows you to enable the inbuilt cudnn auto-tuner to
         # find the best algorithm to use for your hardware.
