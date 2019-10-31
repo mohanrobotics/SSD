@@ -8,7 +8,7 @@ import os
 import argparse
 import logging
 import os
-
+import time
 import torch
 import torch.distributed as dist
 
@@ -56,6 +56,7 @@ def train(cfg, args):
     arguments.update(extra_checkpoint_data)
 
     max_iter = cfg.SOLVER.MAX_ITER // args.num_gpus
+    print('arg distributed',args.distributed)
     train_loader = make_data_loader(cfg, is_train=True, distributed=args.distributed, max_iter=max_iter, start_iter=arguments['iteration'])
     model = do_train(cfg, model, train_loader, optimizer, scheduler, checkpointer, device, arguments, args)
     return model
@@ -72,8 +73,8 @@ def main():
     )
     parser.add_argument("--local_rank", type=int, default=0)
     parser.add_argument('--log_step', default=10, type=int, help='Print logs every log_step')
-    parser.add_argument('--save_step', default=2500, type=int, help='Save checkpoint every save_step')
-    parser.add_argument('--eval_step', default=2500, type=int, help='Evaluate dataset every eval_step, disabled when eval_step < 0')
+    parser.add_argument('--save_step', default=50000, type=int, help='Save checkpoint every save_step')
+    parser.add_argument('--eval_step', default=50000, type=int, help='Evaluate dataset every eval_step, disabled when eval_step < 0')
     parser.add_argument('--use_tensorboard', default=False, type=str2bool)
     parser.add_argument(
         "--skip-test",

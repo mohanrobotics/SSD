@@ -6,7 +6,19 @@ from ssd.data import samplers
 from ssd.data.datasets import build_dataset
 from ssd.data.transforms import build_transforms, build_target_transform
 from ssd.structures.container import Container
-
+import numpy as np
+import os
+import random
+os.environ['PYTHONHASHSEED'] = str(3)
+random.seed(3)
+torch.manual_seed(3)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
+np.random.seed(3)
+torch.cuda.manual_seed(3)
+torch.cuda.manual_seed_all(3)
+def _init_fn(worker_id):
+    np.random.seed(3+int(worker_id))
 
 class BatchCollator:
     def __init__(self, is_train=True):
@@ -47,11 +59,14 @@ def make_data_loader(cfg, is_train=True, distributed=False, max_iter=None, start
 
         batch_size = cfg.SOLVER.BATCH_SIZE if is_train else cfg.TEST.BATCH_SIZE
         batch_sampler = torch.utils.data.sampler.BatchSampler(sampler=sampler, batch_size=batch_size, drop_last=False)
+        print('max_iter',max_iter)
         if max_iter is not None:
             batch_sampler = samplers.IterationBasedBatchSampler(batch_sampler, num_iterations=max_iter, start_iter=start_iter)
-
+        torch.manual_seed(3)
         data_loader = DataLoader(dataset, num_workers=cfg.DATA_LOADER.NUM_WORKERS, batch_sampler=batch_sampler,
-                                 pin_memory=cfg.DATA_LOADER.PIN_MEMORY, collate_fn=BatchCollator(is_train))
+                                 pin_memory=cfg.DATA_LOADER.PIN_MEMORY, collate_fn=BatchCollator(is_train), worker_init_fn=_init_fn)
+        # data_loader = DataLoader(dataset, num_workers=cfg.DATA_LOADER.NUM_WORKERS, batch_sampler=batch_sampler,
+        #                          pin_memory=cfg.DATA_LOADER.PIN_MEMORY, collate_fn=BatchCollator(is_train))
         data_loaders.append(data_loader)
 
     if is_train:

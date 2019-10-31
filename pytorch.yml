@@ -87,5 +87,4 @@ dependencies:
     - tqdm==4.36.1
     - vizer==0.1.4
     - yacs==0.1.6
-prefix: /home/mmuthu2s/anaconda3/envs/pytorch
 
