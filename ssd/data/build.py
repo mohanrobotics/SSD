@@ -8,6 +8,16 @@ from ssd.data.transforms import build_transforms, build_target_transform
 from ssd.structures.container import Container
 
 import numpy as np
+import os
+import random
+os.environ['PYTHONHASHSEED'] = str(3)
+random.seed(3)
+torch.manual_seed(3)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
+np.random.seed(3)
+torch.cuda.manual_seed(3)
+torch.cuda.manual_seed_all(3)
 def _init_fn(worker_id):
     np.random.seed(3+int(worker_id))
 

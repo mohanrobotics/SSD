@@ -53,7 +53,8 @@ def voc_evaluation(dataset, predictions, output_dir, iteration=None):
     if iteration is not None:
         result_path = os.path.join(output_dir, 'result_{:07d}.txt'.format(iteration))
     else:
-        result_path = os.path.join(output_dir, 'result_{}.txt'.format(datetime.now().strftime('%Y-%m-%d_%H-%M-%S')))
+        # result_path = os.path.join(output_dir, 'result_{}.txt'.format(datetime.now().strftime('%Y-%m-%d_%H-%M-%S')))
+        result_path = os.path.join(output_dir, 'result_final.txt')
     with open(result_path, "w") as f:
         f.write(result_str)
 

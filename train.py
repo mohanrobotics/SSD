@@ -1,10 +1,4 @@
 import os
-#
-# os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID";
-# #
-# # # The GPU id to use, usually either "0" or "1";
-# os.environ["CUDA_VISIBLE_DEVICES"] = "1";
-
 import argparse
 import logging
 import os
@@ -72,8 +66,8 @@ def main():
     )
     parser.add_argument("--local_rank", type=int, default=0)
     parser.add_argument('--log_step', default=10, type=int, help='Print logs every log_step')
-    parser.add_argument('--save_step', default=10000, type=int, help='Save checkpoint every save_step')
-    parser.add_argument('--eval_step', default=10000, type=int, help='Evaluate dataset every eval_step, disabled when eval_step < 0')
+    parser.add_argument('--save_step', default=50000, type=int, help='Save checkpoint every save_step')
+    parser.add_argument('--eval_step', default=50000, type=int, help='Evaluate dataset every eval_step, disabled when eval_step < 0')
     parser.add_argument('--use_tensorboard', default=False, type=str2bool)
     parser.add_argument(
         "--skip-test",
@@ -122,8 +116,8 @@ def main():
     if not args.skip_test:
         logger.info('Start evaluating...')
         torch.cuda.empty_cache()  # speed up evaluating after training finished
-        do_evaluation(cfg, model, distributed=args.distributed)
-
+        # do_evaluation(cfg, model, distributed=args.distributed)
+        do_evaluation(cfg, model, distributed=False)
 
 if __name__ == '__main__':
     main()
