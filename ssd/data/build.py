@@ -7,6 +7,9 @@ from ssd.data.datasets import build_dataset
 from ssd.data.transforms import build_transforms, build_target_transform
 from ssd.structures.container import Container
 
+import numpy as np
+def _init_fn(worker_id):
+    np.random.seed(3+int(worker_id))
 
 class BatchCollator:
     def __init__(self, is_train=True):
@@ -50,8 +53,10 @@ def make_data_loader(cfg, is_train=True, distributed=False, max_iter=None, start
         if max_iter is not None:
             batch_sampler = samplers.IterationBasedBatchSampler(batch_sampler, num_iterations=max_iter, start_iter=start_iter)
 
+        # data_loader = DataLoader(dataset, num_workers=cfg.DATA_LOADER.NUM_WORKERS, batch_sampler=batch_sampler,
+        #                          pin_memory=cfg.DATA_LOADER.PIN_MEMORY, collate_fn=BatchCollator(is_train))
         data_loader = DataLoader(dataset, num_workers=cfg.DATA_LOADER.NUM_WORKERS, batch_sampler=batch_sampler,
-                                 pin_memory=cfg.DATA_LOADER.PIN_MEMORY, collate_fn=BatchCollator(is_train))
+                                 pin_memory=cfg.DATA_LOADER.PIN_MEMORY, collate_fn=BatchCollator(is_train), worker_init_fn=_init_fn)
         data_loaders.append(data_loader)
 
     if is_train:

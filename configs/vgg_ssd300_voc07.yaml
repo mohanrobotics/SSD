@@ -6,10 +6,10 @@ DATASETS:
   TRAIN: ("voc_2007_trainval", )
   TEST: ("voc_2007_test", )
 SOLVER:
-  MAX_ITER: 60000
-  LR_STEPS: [40000, 50000]
+  MAX_ITER: 50000
+  LR_STEPS: [40000, 45000]
   GAMMA: 0.1
   BATCH_SIZE: 32
   LR: 1e-3
 
-OUTPUT_DIR: 'outputs/vgg_ssd300_voc07'
+OUTPUT_DIR: 'outputs/vgg_ssd300_voc07_gpu_4'

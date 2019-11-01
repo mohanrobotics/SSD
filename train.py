@@ -72,8 +72,8 @@ def main():
     )
     parser.add_argument("--local_rank", type=int, default=0)
     parser.add_argument('--log_step', default=10, type=int, help='Print logs every log_step')
-    parser.add_argument('--save_step', default=2500, type=int, help='Save checkpoint every save_step')
-    parser.add_argument('--eval_step', default=2500, type=int, help='Evaluate dataset every eval_step, disabled when eval_step < 0')
+    parser.add_argument('--save_step', default=10000, type=int, help='Save checkpoint every save_step')
+    parser.add_argument('--eval_step', default=10000, type=int, help='Evaluate dataset every eval_step, disabled when eval_step < 0')
     parser.add_argument('--use_tensorboard', default=False, type=str2bool)
     parser.add_argument(
         "--skip-test",
@@ -91,7 +91,6 @@ def main():
     num_gpus = int(os.environ["WORLD_SIZE"]) if "WORLD_SIZE" in os.environ else 1
     args.distributed = num_gpus > 1
     args.num_gpus = num_gpus
-    print(args.skip_test,'skiptest')
     if torch.cuda.is_available():
         # This flag allows you to enable the inbuilt cudnn auto-tuner to
         # find the best algorithm to use for your hardware.
